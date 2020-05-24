@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.login.R;
 import com.example.login.model.Usuario;
+import com.example.login.ui.login.MainActivity;
 
 public class RegistroActivity extends AppCompatActivity {
     private EditText etDni, etApellido, etNombre, etEmail, etContrasenia;
@@ -43,8 +46,15 @@ public class RegistroActivity extends AppCompatActivity {
                 etContrasenia.setText(s);
             }
         });
-        configView();
+        vm.getActivadorIntent().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
 
+            }
+        });
+        configView();
     }
     public void configView(){
         etDni = findViewById(R.id.etDni);
@@ -56,10 +66,9 @@ public class RegistroActivity extends AppCompatActivity {
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplication(), "Datos guardados correctamente", Toast.LENGTH_LONG).show();
+                vm.guardar(etDni.getText().toString(), etApellido.getText().toString(), etNombre.getText().toString(), etEmail.getText().toString(), etContrasenia.getText().toString());
             }
         });
         vm.cargarDatos();
-
     }
 }
